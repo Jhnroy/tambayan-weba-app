@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "singularName": "event",
+    "pluralName": "events",
+    "displayName": "Event"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "datetime": {
+      "type": "datetime"
+    },
+    "location": {
+      "type": "string"
+    },
+    "Stats": {
+      "type": "enumeration",
+      "enum": [
+        "ACTIVE",
+        "CANCELLED"
+      ]
+    },
+    "slot_limit": {
+      "type": "integer"
+    },
+    "available_slots": {
+      "type": "integer"
+    }
+  }
+}
