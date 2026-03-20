@@ -1,9 +1,10 @@
-import { MySignup } from '@/resident/my-signup'
+import { Notification } from '@/resident/notification'
 import React from 'react'
 
 export const page = () => {
   return (
-    <MySignup />
+    <Notification />
   )
 }
+
 export default page

@@ -69,8 +69,6 @@ export const ResidentDashboard = () => {
 
      
       <div className="flex-1 p-4 md:p-8">
-
-       
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
           <h1 className="text-2xl font-bold text-gray-800">Event Feed</h1>
 

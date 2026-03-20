@@ -1,9 +1,9 @@
-import { MySignup } from '@/resident/my-signup'
+import { ResidentCalendar } from '@/resident/resident-calendar'
 import React from 'react'
 
 export const page = () => {
   return (
-    <MySignup />
+    <ResidentCalendar />
   )
 }
 export default page

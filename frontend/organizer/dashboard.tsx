@@ -20,7 +20,6 @@ type ProgressProps = {
 };
 
 
-
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -34,12 +33,11 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Desktop Sidebar */}
+    
       <div className="hidden md:flex md:w-64 bg-white border-r">
         <OrganizerSidebar />
       </div>
 
-      {/* Mobile Sidebar */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 flex">
           <div
@@ -58,9 +56,8 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Main Content */}
       <main className="flex-1 p-4 md:p-6 pt-20 md:pt-6">
-        {/* Header */}
+
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <h2 className="text-2xl font-bold">Organizer Dashboard</h2>
           <Button className="bg-orange-500 hover:bg-orange-600 w-full md:w-auto">
@@ -68,7 +65,7 @@ export default function Dashboard() {
           </Button>
         </div>
 
-        {/* Stats Cards */}
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
           <StatCard title="Active Events" value="5" subtitle="+2 this month" />
           <StatCard title="Total Sign-ups" value="87" subtitle="+12 this week" />
@@ -76,7 +73,6 @@ export default function Dashboard() {
           <StatCard title="Volunteer Hours" value="192" subtitle="+48 this month" />
         </div>
 
-        {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
           <Card className="lg:col-span-2 rounded-2xl shadow-sm">
             <CardContent className="p-4">
@@ -103,7 +99,6 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Table */}
         <Card className="mt-6 rounded-2xl shadow-sm">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-4">Recent Events</h3>

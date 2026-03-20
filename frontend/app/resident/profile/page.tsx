@@ -1,8 +1,9 @@
+import { ResidentProfile } from '@/resident/resident-profile'
 import React from 'react'
 
 export const Page = () => {
   return (
-    <div>P</div>
+    <ResidentProfile />
   )
 }
 export default Page
