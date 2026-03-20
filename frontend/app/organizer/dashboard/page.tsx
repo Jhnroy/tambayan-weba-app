@@ -1,10 +1,10 @@
 
-import OrganizerDashboard from '@/organizer/organizer-dashboard'
+import Dashboard from '@/organizer/dashboard'
 import React from 'react'
 
 export const Page = () => {
   return (
-    <OrganizerDashboard />
+   <Dashboard />
   )
 }
 export default Page
