@@ -1,4 +1,5 @@
 import { ResidentSidebar } from "@/components/resident-sidebar";
+import {  BellOutlined } from "@ant-design/icons";
 import React from "react";
 
 const events = [
@@ -79,8 +80,8 @@ export const ResidentDashboard = () => {
               placeholder="Search events..."
               className="w-full md:w-64 px-4 py-2 bg-gray-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border">
-              🔔
+            <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center shadow-sm ">
+              <BellOutlined />
             </div>
           </div>
         </div>
@@ -92,7 +93,7 @@ export const ResidentDashboard = () => {
               3 new community events near you this week
             </p>
           </div>
-          <div className="hidden md:flex text-3xl opacity-80">🌍</div>
+          {/* <div className="hidden md:flex text-3xl opacity-80">🌍</div> */}
         </div>
 
         <div className="flex flex-wrap gap-2 mb-6">
