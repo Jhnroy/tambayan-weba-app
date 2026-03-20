@@ -35,6 +35,18 @@
     },
     "available_slots": {
       "type": "integer"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "events"
+    },
+    "participations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::participation.participation",
+      "mappedBy": "event"
     }
   }
 }

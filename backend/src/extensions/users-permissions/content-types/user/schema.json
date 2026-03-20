@@ -79,6 +79,30 @@
     },
     "password_hash": {
       "type": "string"
+    },
+    "events": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::event.event",
+      "mappedBy": "users_permissions_user"
+    },
+    "participations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::participation.participation",
+      "mappedBy": "users_permissions_user"
+    },
+    "organizer": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::organizer.organizer",
+      "inversedBy": "users_permissions_user"
+    },
+    "userrole": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::userrole.userrole",
+      "inversedBy": "users_permissions_user"
     }
   }
 }
