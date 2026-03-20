@@ -88,7 +88,6 @@ export const View = () => {
         <p className="max-w-xl mx-auto text-sm md:text-base mb-6">
           Discover volunteer opportunities and community events in your
           barangay. Sign up in one tap — confirmed by SMS.
-          sdfd
         </p>
 
         <div className="flex justify-center gap-4">
