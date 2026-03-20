@@ -1,4 +1,5 @@
-import { OrganizerDashboard } from '@/organizer/organizer-dashboard'
+
+import OrganizerDashboard from '@/organizer/organizer-dashboard'
 import React from 'react'
 
 export const Page = () => {

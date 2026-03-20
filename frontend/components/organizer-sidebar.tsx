@@ -71,7 +71,7 @@ export const OrganizerSidebar = () => {
               <ul className="space-y-1">
                 <li className="flex items-center gap-3 px-3 py-2 bg-blue-100 text-blue-600 rounded-md cursor-pointer">
                   <Home size={18} />
-                  Event Feed
+                  Dashboard
                 </li>
                 <li className="flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-200 rounded-md cursor-pointer">
                   <Calendar size={18} />
