@@ -1,5 +1,6 @@
 
-import Dashboard from '@/organizer/dashboard'
+
+import Dashboard from '@/features/organizer/dashboard'
 import React from 'react'
 
 export const Page = () => {

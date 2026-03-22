@@ -1,4 +1,5 @@
-import { View } from "@/landing-page/view";
+import { View } from "@/features/landing-page/view";
+
 
 
 export default function Home() {
