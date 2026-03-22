@@ -6,3 +6,4 @@ export const Page = () => {
     <Attendance />
   )
 }
+export default Page

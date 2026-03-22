@@ -77,7 +77,6 @@ export const ResidentSidebar = () => {
 
            
             <div className="mt-4 px-4">
-         
               <ul className="space-y-1">
                 <Link
                   href="/resident/dashboard"

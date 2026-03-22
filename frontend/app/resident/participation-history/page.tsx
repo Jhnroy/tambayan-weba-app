@@ -1,4 +1,5 @@
-import { ResidentParticipationHistory } from '@/resident/resident-participation-history'
+
+import { ResidentParticipationHistory } from '@/features/resident/resident-participation-history'
 import React from 'react'
 
 export const page = () => {

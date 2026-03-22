@@ -11,7 +11,7 @@ export const ResidentParticipationHistory = () => {
 
      <div className="flex-1 p-4 md:p-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-          <h1 className="text-2xl font-bold text-gray-800">Profile</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Participation History</h1>
              
             <div className="flex items-center gap-2">
               <input

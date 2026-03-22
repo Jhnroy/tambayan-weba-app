@@ -6,3 +6,5 @@ export const Page = () => {
     <CreateEvent />
   )
 }
+
+export default Page

@@ -6,3 +6,4 @@ export const Page = () => {
    <MyEvent />
   )
 }
+export default Page

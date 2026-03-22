@@ -1,4 +1,7 @@
-import { MySignup } from '@/resident/my-signup'
+
+
+import { MySignup } from '@/features/resident/my-signup'
+
 import React from 'react'
 
 export const page = () => {

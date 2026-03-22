@@ -1,4 +1,5 @@
-import { ResidentProfile } from '@/resident/resident-profile'
+
+import { ResidentProfile } from '@/features/resident/resident-profile'
 import React from 'react'
 
 export const Page = () => {

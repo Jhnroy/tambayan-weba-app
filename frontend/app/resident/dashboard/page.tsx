@@ -1,4 +1,5 @@
-import { ResidentDashboard } from '@/resident/resident-dashboard'
+
+import { ResidentDashboard } from '@/features/resident/resident-dashboard'
 import React from 'react'
 
 export const page = () => {

@@ -1,4 +1,5 @@
-import { ResidentCalendar } from '@/resident/resident-calendar'
+
+import { ResidentCalendar } from '@/features/resident/resident-calendar'
 import React from 'react'
 
 export const page = () => {
