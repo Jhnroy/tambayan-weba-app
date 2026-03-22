@@ -1,8 +1,9 @@
+import { Signup } from '@/features/signup'
 import React from 'react'
 
 export const page = () => {
   return (
-    <div>page</div>
+    <Signup />
   )
 }
 export default page
