@@ -6,3 +6,4 @@ export const Page = () => {
     <OrganizationProfile />
   )
 }
+export default Page

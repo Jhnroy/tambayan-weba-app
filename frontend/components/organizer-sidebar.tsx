@@ -155,7 +155,7 @@ export const OrganizerSidebar = () => {
 
             <ul className="space-y-1">
               {navItem(
-                "/organizer/profile",
+                "/organizer/organization-profile",
                 <Building2 size={18} />,
                 "Organization Profile"
               )}
