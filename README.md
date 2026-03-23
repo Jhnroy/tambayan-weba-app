@@ -1,1 +1,2 @@
 # tambayan-weba-app
+Tambayan is a community event and volunteer hub built for Filipino barangays, developed as part of my internship at SWR Tech. It enables verified organizers to create and manage events, while residents can discover opportunities, sign up, and track their participation history. Powered by Next.js and Strapi, the platform features role-based access control, organizer verification, and real-time volunteer slot management to support community-driven initiatives.
