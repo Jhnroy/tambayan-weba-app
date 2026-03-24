@@ -77,7 +77,7 @@ export default function Dashboard() {
           </Button>
         </div>
 
-        {/* Stats */}
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
           <StatCard title="Active Events" value="5" subtitle="+2 this month" />
           <StatCard title="Total Sign-ups" value="87" subtitle="+12 this week" />
@@ -85,11 +85,11 @@ export default function Dashboard() {
           <StatCard title="Volunteer Hours" value="192" subtitle="+48 this month" />
         </div>
 
-        {/* ✅ Organizer Verification Section */}
+        
         <Card className="mt-6 rounded-2xl shadow-sm border border-blue-200 bg-blue-50">
           <CardContent className="p-5 space-y-4">
             <div>
-              <h3 className="text-lg font-semibold text-blue-700">
+              <h3 className="text-lg font-semibold">
                 Organizer Verification
               </h3>
               <p className="text-sm text-gray-600">

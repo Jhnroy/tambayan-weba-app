@@ -4,137 +4,144 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Building2, User } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
+import API from "@/lib/api";
 
 export const Login = () => {
+  const [role, setRole] = useState<"resident" | "organizer">("resident");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const [role, setRole] = useState("resident");
+  console.log('hiii ',process.env.NEXT_PUBLIC_API_URL);
+
+  const handleLogin = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await API.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/local`, {
+        identifier: email,
+        password,
+      });
+
+      const user = res.data.user;
+      const jwt = res.data.jwt;
+
+      // Save auth
+      localStorage.setItem("token", jwt);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      console.log("✅ Logged in:", user);
+
+      
+      if (role === "organizer") {
+        window.location.href = "/organizer/dashboard";
+      } else {
+        window.location.href = "/resident/dashboard";
+      }
+
+    } catch (err: any) {
+      console.error("❌ FULL ERROR:", err);
+      console.error("❌ RESPONSE:", err.response);
+      console.error("❌ DATA:", err.response?.data);
+
+      setError(
+        err.response?.data?.error?.message ||
+        "Invalid email or password"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
 
-      {/* HEADER */}
+      
       <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
-        <Link
-          href="/"
-          className="flex items-center gap-2 font-semibold text-blue-700 text-lg hover:opacity-80"
-        >
+        <Link href="/" className="font-semibold text-blue-700 text-lg">
           Tambayan
         </Link>
-
-        
       </nav>
-
 
       {/* PAGE */}
       <div className="flex flex-1 items-center justify-center px-4">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-6">
 
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-6 sm:p-8">
+          {/* BACK */}
+          <Link href="/" className="flex items-center gap-2 text-sm mb-4">
+            <ArrowLeftOutlined /> Back
+          </Link>
 
-
-          {/* BACK + TITLE */}
-          <div className="mb-6">
-
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-gray-600 hover:text-black text-sm mb-4"
-            >
-              <ArrowLeftOutlined />
-              Back
-            </Link>
-
-            <div className="text-center">
-              <h1 className="text-2xl font-bold">Welcome back</h1>
-              <p className="text-gray-500 text-sm">Log in to Tambayan</p>
-            </div>
-
+          {/* TITLE */}
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold">Welcome back</h1>
+            <p className="text-gray-500 text-sm">Log in to Tambayan</p>
           </div>
-
 
           {/* ROLE SELECT */}
           <div className="grid grid-cols-2 gap-3 mb-5">
-          <button
-            onClick={() => setRole("resident")}
-            className={`border rounded-lg p-3 flex flex-col items-center text-sm ${
-              role === "resident"
-                ? "border-blue-600 bg-blue-50"
-                : "border-gray-200"
-            }`}
-          >
-            <User size={20} />
-            <span className="font-medium mt-1">Resident</span>
-            <span className="text-xs text-gray-500">
-              Browse & join events
-            </span>
-          </button>
+            <button
+              onClick={() => setRole("resident")}
+              className={`border p-3 rounded ${
+                role === "resident"
+                  ? "bg-blue-50 border-blue-600"
+                  : "border-gray-200"
+              }`}
+            >
+              <User size={20} />
+              <p>Resident</p>
+            </button>
 
-          <button
-            onClick={() => setRole("organizer")}
-            className={`border rounded-lg p-3 flex flex-col items-center text-sm ${
-              role === "organizer"
-                ? "border-blue-600 bg-blue-50"
-                : "border-gray-200"
-            }`}
-          >
-            <Building2 size={20} />
-            <span className="font-medium mt-1">Organizer</span>
-            <span className="text-xs text-gray-500">
-              Post & manage events
-            </span>
-          </button>
-        </div>
-
-
-          {/* FORM */}
-          <div className="space-y-4">
-
-            {/* EMAIL / MOBILE */}
-            <div>
-              <label className="text-xs text-gray-500">
-                EMAIL OR MOBILE
-              </label>
-
-              <input
-                type="text"
-                placeholder="09XXXXXXXXX or email"
-                className="w-full mt-1 px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-
-            {/* PASSWORD */}
-            <div>
-              <label className="text-xs text-gray-500">
-                PASSWORD
-              </label>
-
-              <input
-                type="password"
-                placeholder="••••••••"
-                className="w-full mt-1 px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
+            <button
+              onClick={() => setRole("organizer")}
+              className={`border p-3 rounded ${
+                role === "organizer"
+                  ? "bg-blue-50 border-blue-600"
+                  : "border-gray-200"
+              }`}
+            >
+              <Building2 size={20} />
+              <p>Organizer</p>
+            </button>
           </div>
 
+          {/* EMAIL */}
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full mb-3 p-2 border rounded"
+          />
 
-          {/* LOGIN BUTTON */}
-          <button className="w-full mt-6 bg-blue-700 text-white py-2 rounded-md hover:bg-blue-800 transition">
-            Log In
+          {/* PASSWORD */}
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full mb-3 p-2 border rounded"
+          />
+
+          {/* BUTTON */}
+          <button
+            onClick={handleLogin}
+            disabled={loading}
+            className="w-full bg-blue-700 text-white py-2 rounded disabled:opacity-50"
+          >
+            {loading ? "Logging in..." : "Log In"}
           </button>
 
-
-          {/* SIGNUP LINK */}
-          <p className="text-center text-sm text-gray-500 mt-4">
-            No account?{" "}
-            <Link href="/signup">
-              <span className="text-blue-600 cursor-pointer hover:underline">
-                Sign up free
-              </span>
-            </Link>
-          </p>
+          {/* ERROR */}
+          {error && (
+            <p className="text-red-500 mt-3 text-center">
+              {error}
+            </p>
+          )}
 
         </div>
-
       </div>
     </div>
   );
