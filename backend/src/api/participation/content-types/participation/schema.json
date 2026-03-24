@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "participations",
+  "info": {
+    "singularName": "participation",
+    "pluralName": "participations",
+    "displayName": "Participation"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Stats": {
+      "type": "enumeration",
+      "enum": [
+        "UPCOMING",
+        "ATTENDED",
+        "COMPLETED"
+      ]
+    },
+    "event": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::event.event",
+      "inversedBy": "participations"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "participations"
+    }
+  }
+}

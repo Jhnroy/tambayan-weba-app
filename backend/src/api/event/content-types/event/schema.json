@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "singularName": "event",
+    "pluralName": "events",
+    "displayName": "Event"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "dateTime": {
+      "type": "datetime"
+    },
+    "location": {
+      "type": "string"
+    },
+    "eventType": {
+      "type": "enumeration",
+      "enum": [
+        "CLEANUP DRIVE",
+        "FEEDING PROGRAM",
+        "LIVELIHOOD SEMINAR",
+        "MEDICAL MISSION",
+        "SPORTS"
+      ]
+    },
+    "slotLimit": {
+      "type": "integer"
+    },
+    "availableSlots": {
+      "type": "integer"
+    },
+    "stats": {
+      "type": "enumeration",
+      "enum": [
+        "ACTIVE",
+        "CANCELLED"
+      ]
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "events"
+    },
+    "participations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::participation.participation",
+      "mappedBy": "event"
+    }
+  }
+}

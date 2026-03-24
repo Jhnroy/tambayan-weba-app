@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_roles",
+  "info": {
+    "singularName": "user-role",
+    "pluralName": "user-roles",
+    "displayName": "UserRole"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "user_role"
+    }
+  }
+}

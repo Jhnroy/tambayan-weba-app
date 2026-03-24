@@ -1,25 +1,93 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowLeft, User, Building2, Paperclip } from "lucide-react";
+import axios from "axios";
+import type { AxiosError } from "axios";
+import { ArrowLeft, User, Building2 } from "lucide-react";
 import Link from "next/link";
 
+const API_URL = process.env.NEXT_PUBLIC_URL || "http://localhost:1337";
+
 export const Signup = () => {
-  const [role, setRole] = useState("organizer");
+  const [role, setRole] = useState<"resident" | "organizer">("organizer");
+
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  type StrapiErrorResponse = {
+  data: null;
+  error: {
+    status: number;
+    name: string;
+    message: string;
+  };
+};
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loading) return;
+
+    console.log("API URL:", API_URL);
+    setLoading(true);
+
+    try {
+      const res = await axios.post(
+        `${API_URL}/api/auth/local/register`,
+        {
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          // role, // 👈 uncomment if your backend expects it
+        }
+      );
+
+      console.log("✅ SUCCESS:", res.data);
+      alert("Registered successfully!");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        
+        const axiosError = err as AxiosError<StrapiErrorResponse>;
+
+        const message =
+          axiosError.response?.data?.error?.message ||
+          axiosError.message ||
+          "Registration failed";
+
+        console.error("❌ AXIOS ERROR:", axiosError.response?.data);
+        alert(message);
+      } else {
+        console.error("❌ UNKNOWN ERROR:", err);
+        alert("Something went wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-
-      
-      
-
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
         
-        <Link href="/" className="flex items-center gap-2 font-semibold text-lg hover:opacity-80">
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-semibold text-lg hover:opacity-80"
+        >
           <ArrowLeft />
           Back
         </Link>
-        {/* Logo + Title */}
+
         <div className="text-center mb-6">
           <div className="text-2xl font-bold">Join Tambayan</div>
           <p className="text-gray-500 text-sm">
@@ -27,11 +95,11 @@ export const Signup = () => {
           </p>
         </div>
 
-        {/* Role Selection */}
         <p className="text-xs text-gray-500 mb-2">I AM A...</p>
 
         <div className="grid grid-cols-2 gap-3 mb-5">
           <button
+            type="button"
             onClick={() => setRole("resident")}
             className={`border rounded-lg p-3 flex flex-col items-center text-sm ${
               role === "resident"
@@ -41,12 +109,10 @@ export const Signup = () => {
           >
             <User size={20} />
             <span className="font-medium mt-1">Resident</span>
-            <span className="text-xs text-gray-500">
-              Browse & join events
-            </span>
           </button>
 
           <button
+            type="button"
             onClick={() => setRole("organizer")}
             className={`border rounded-lg p-3 flex flex-col items-center text-sm ${
               role === "organizer"
@@ -56,117 +122,54 @@ export const Signup = () => {
           >
             <Building2 size={20} />
             <span className="font-medium mt-1">Organizer</span>
-            <span className="text-xs text-gray-500">
-              Post & manage events
-            </span>
           </button>
         </div>
 
-        {/* Form */}
-        <form className="space-y-4">
-
-          {/* Name + Mobile */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs font-medium">FULL NAME</label>
-              <input
-                type="text"
-                placeholder="Maria Santos"
-                className="w-full border rounded-lg p-2 mt-1 text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-medium">MOBILE (PH)</label>
-              <input
-                type="text"
-                placeholder="09XXXXXXXXX"
-                className="w-full border rounded-lg p-2 mt-1 text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Email */}
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-xs font-medium">EMAIL</label>
+            <label className="text-xs font-medium">FULL NAME</label>
             <input
-              type="email"
-              placeholder="you@email.com"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              type="text"
               className="w-full border rounded-lg p-2 mt-1 text-sm"
+              required
             />
           </div>
 
-          {/* Password */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs font-medium">PASSWORD</label>
-              <input
-                type="password"
-                placeholder="Min 6 chars"
-                className="w-full border rounded-lg p-2 mt-1 text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-medium">CONFIRM</label>
-              <input
-                type="password"
-                placeholder="Re-enter"
-                className="w-full border rounded-lg p-2 mt-1 text-sm"
-              />
-            </div>
+          <div>
+            <label className="text-xs font-medium">EMAIL</label>
+            <input
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              type="email"
+              className="w-full border rounded-lg p-2 mt-1 text-sm"
+              required
+            />
           </div>
 
-          {/* Organizer Verification */}
-          {role === "organizer" && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
+          <div>
+            <label className="text-xs font-medium">PASSWORD</label>
+            <input
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              type="password"
+              className="w-full border rounded-lg p-2 mt-1 text-sm"
+              required
+            />
+          </div>
 
-              <p className="text-xs font-semibold text-blue-700">
-                ORGANIZER VERIFICATION
-              </p>
-
-              <div>
-                <label className="text-xs font-medium">
-                  ORGANIZATION NAME
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Brgy. Holy Spirit LGU"
-                  className="w-full border rounded-lg p-2 mt-1 text-sm"
-                />
-              </div>
-
-              {/* Upload */}
-              <div>
-                <label className="text-xs font-medium">
-                  PERMIT DOCUMENT (PDF OR IMAGE)
-                </label>
-
-                <label className="mt-2 border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center text-gray-500 cursor-pointer">
-                  <Paperclip size={20} />
-                  <span className="text-xs mt-2">
-                    Click to upload barangay/LGU permit
-                  </span>
-
-                  <input type="file" className="hidden" />
-                </label>
-              </div>
-
-              <p className="text-xs text-blue-700">
-                Your account will be reviewed by admin before you can post
-                events.
-              </p>
-            </div>
-          )}
-
-          {/* Submit */}
           <button
-            className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700"
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
           >
-            Submit for Verification
+            {loading ? "Registering..." : "Submit"}
           </button>
 
-          {/* Login */}
           <p className="text-center text-xs text-gray-500">
             Already have an account?{" "}
             <Link href="/login" className="text-blue-600 hover:underline">

@@ -430,6 +430,156 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiEventEvent extends Struct.CollectionTypeSchema {
+  collectionName: 'events';
+  info: {
+    displayName: 'Event';
+    pluralName: 'events';
+    singularName: 'event';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    availableSlots: Schema.Attribute.Integer;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    dateTime: Schema.Attribute.DateTime;
+    description: Schema.Attribute.String;
+    eventType: Schema.Attribute.Enumeration<
+      [
+        'CLEANUP DRIVE',
+        'FEEDING PROGRAM',
+        'LIVELIHOOD SEMINAR',
+        'MEDICAL MISSION',
+        'SPORTS',
+      ]
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::event.event'> &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.String;
+    participations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::participation.participation'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    slotLimit: Schema.Attribute.Integer;
+    stats: Schema.Attribute.Enumeration<['ACTIVE', 'CANCELLED']>;
+    title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiOrganinerProfileOrganinerProfile
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'organiner_profiles';
+  info: {
+    displayName: 'OrganizerProfile';
+    pluralName: 'organiner-profiles';
+    singularName: 'organiner-profile';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::organiner-profile.organiner-profile'
+    > &
+      Schema.Attribute.Private;
+    OrganizerName: Schema.Attribute.String;
+    PermitDetails: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    Stats: Schema.Attribute.Enumeration<['PENDING', 'APPROVED', 'REJECTED']>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiParticipationParticipation
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'participations';
+  info: {
+    displayName: 'Participation';
+    pluralName: 'participations';
+    singularName: 'participation';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    event: Schema.Attribute.Relation<'manyToOne', 'api::event.event'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::participation.participation'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    Stats: Schema.Attribute.Enumeration<['UPCOMING', 'ATTENDED', 'COMPLETED']>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiUserRoleUserRole extends Struct.CollectionTypeSchema {
+  collectionName: 'user_roles';
+  info: {
+    displayName: 'UserRole';
+    pluralName: 'user-roles';
+    singularName: 'user-role';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::user-role.user-role'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -886,7 +1036,6 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -900,12 +1049,21 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    events: Schema.Attribute.Relation<'oneToMany', 'api::event.event'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    organiner_profile: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::organiner-profile.organiner-profile'
+    >;
+    participations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::participation.participation'
+    >;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
@@ -921,6 +1079,10 @@ export interface PluginUsersPermissionsUser
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    user_role: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::user-role.user-role'
+    >;
     username: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique &
@@ -941,6 +1103,10 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::event.event': ApiEventEvent;
+      'api::organiner-profile.organiner-profile': ApiOrganinerProfileOrganinerProfile;
+      'api::participation.participation': ApiParticipationParticipation;
+      'api::user-role.user-role': ApiUserRoleUserRole;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

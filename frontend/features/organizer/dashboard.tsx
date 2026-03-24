@@ -8,9 +8,6 @@ import { Button } from "@/components/ui/button";
 import { EventTypesChart } from "@/components/features/organizer/graph/event-graph";
 import { VolunteerChart } from "@/components/features/organizer/graph/volunteer-graph";
 
-
-
-
 type StatCardProps = {
   title: string;
   value: string;
@@ -20,14 +17,12 @@ type StatCardProps = {
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  
   const volunteerData = [
     { name: "Jan", signups: 40 },
     { name: "Feb", signups: 60 },
     { name: "Mar", signups: 90 },
     { name: "Apr", signups: 55 },
   ];
-
 
   const eventData = [
     { type: "Cleanup", value: 40 },
@@ -90,10 +85,49 @@ export default function Dashboard() {
           <StatCard title="Volunteer Hours" value="192" subtitle="+48 this month" />
         </div>
 
+        {/* ✅ Organizer Verification Section */}
+        <Card className="mt-6 rounded-2xl shadow-sm border border-blue-200 bg-blue-50">
+          <CardContent className="p-5 space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-blue-700">
+                Organizer Verification
+              </h3>
+              <p className="text-sm text-gray-600">
+                Verify your organization to unlock full features like publishing
+                events and managing volunteers.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-3">
+              <input
+                type="text"
+                placeholder="Organization Name"
+                className="w-full border rounded-lg p-2 text-sm"
+              />
+
+              <select className="w-full border rounded-lg p-2 text-sm">
+                <option>Select Organization Type</option>
+                <option>Barangay</option>
+                <option>NGO</option>
+                <option>School</option>
+                <option>Private Group</option>
+              </select>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
+              <p className="text-xs text-gray-500">
+                ⚠️ Verification usually takes 1–2 days
+              </p>
+
+              <Button className="bg-blue-600 hover:bg-blue-700 w-full md:w-auto">
+                Submit for Verification
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
-          
-          {/* ✅ Volunteer Chart (component na) */}
           <Card className="lg:col-span-2 rounded-2xl shadow-sm">
             <CardContent className="p-4">
               <h3 className="font-semibold mb-4">Volunteer Sign-ups</h3>
@@ -101,14 +135,12 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* ✅ Event Types Chart (component na) */}
           <Card className="rounded-2xl shadow-sm">
             <CardContent className="p-4">
               <h3 className="font-semibold mb-4">Event Types</h3>
               <EventTypesChart data={eventData} />
             </CardContent>
           </Card>
-
         </div>
 
         {/* Table */}

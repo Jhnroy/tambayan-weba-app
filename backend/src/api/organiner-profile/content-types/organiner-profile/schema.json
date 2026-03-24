@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "organiner_profiles",
+  "info": {
+    "singularName": "organiner-profile",
+    "pluralName": "organiner-profiles",
+    "displayName": "OrganizerProfile"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "OrganizerName": {
+      "type": "string"
+    },
+    "PermitDetails": {
+      "type": "string"
+    },
+    "Stats": {
+      "type": "enumeration",
+      "enum": [
+        "PENDING",
+        "APPROVED",
+        "REJECTED"
+      ]
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "organiner_profile"
+    }
+  }
+}
