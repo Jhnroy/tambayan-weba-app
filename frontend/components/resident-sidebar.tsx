@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Home,
   Calendar,
@@ -19,6 +19,7 @@ import {
 export const ResidentSidebar = () => {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const linkClass = (path: string) =>
     `flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer ${
@@ -27,9 +28,21 @@ export const ResidentSidebar = () => {
         : "text-gray-600 hover:bg-gray-200"
     }`;
 
+  // ✅ Logout Function
+  const handleLogout = () => {
+    // Clear auth data (example: token in localStorage)
+    localStorage.removeItem("token");
+
+    // Optional: clear all storage
+    // localStorage.clear();
+
+    // Redirect to login page
+    router.push("/login");
+  };
+
   return (
     <>
-      
+      {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between p-4 bg-white shadow">
         <h1 className="font-semibold text-lg">Tambayan</h1>
         <button onClick={() => setOpen(true)}>
@@ -37,7 +50,7 @@ export const ResidentSidebar = () => {
         </button>
       </div>
 
-  
+      {/* Overlay */}
       {open && (
         <div
           className="fixed inset-0 bg-black/40 z-40 md:hidden"
@@ -51,7 +64,7 @@ export const ResidentSidebar = () => {
         ${open ? "translate-x-0" : "-translate-x-full"}
         md:translate-x-0 md:static md:block`}
       >
-      
+        {/* Close Button */}
         <div className="md:hidden flex justify-end p-4">
           <button onClick={() => setOpen(false)}>
             <X />
@@ -59,9 +72,8 @@ export const ResidentSidebar = () => {
         </div>
 
         <div className="flex flex-col h-full justify-between border-r border-gray-300">
-     
           <div>
-            
+            {/* Profile */}
             <div className="p-6 flex flex-col items-center border-b border-gray-300">
               <div className="w-16 h-16 rounded-full border-2 border-blue-500 flex items-center justify-center mb-2">
                 <User className="text-blue-500" />
@@ -75,23 +87,17 @@ export const ResidentSidebar = () => {
               </span>
             </div>
 
-           
+            {/* Links */}
             <div className="mt-4 px-4">
               <ul className="space-y-1">
-                <Link
-                  href="/resident/dashboard"
-                  onClick={() => setOpen(false)}
-                >
+                <Link href="/resident/dashboard" onClick={() => setOpen(false)}>
                   <div className={linkClass("/resident/dashboard")}>
                     <Home size={18} />
                     Event Feed
                   </div>
                 </Link>
 
-                <Link
-                  href="/resident/calendar"
-                  onClick={() => setOpen(false)}
-                >
+                <Link href="/resident/calendar" onClick={() => setOpen(false)}>
                   <div className={linkClass("/resident/calendar")}>
                     <Calendar size={18} />
                     Calendar
@@ -103,10 +109,7 @@ export const ResidentSidebar = () => {
                 MY ACTIVITY
               </p>
               <ul className="space-y-1">
-                <Link
-                  href="/resident/my-signups"
-                  onClick={() => setOpen(false)}
-                >
+                <Link href="/resident/my-signups" onClick={() => setOpen(false)}>
                   <div
                     className={`flex items-center justify-between ${linkClass(
                       "/resident/my-signups"
@@ -136,10 +139,7 @@ export const ResidentSidebar = () => {
                   </div>
                 </Link>
 
-                <Link
-                  href="/resident/profile"
-                  onClick={() => setOpen(false)}
-                >
+                <Link href="/resident/profile" onClick={() => setOpen(false)}>
                   <div className={linkClass("/resident/profile")}>
                     <User size={18} />
                     My Profile
@@ -171,10 +171,7 @@ export const ResidentSidebar = () => {
                   </div>
                 </Link>
 
-                <Link
-                  href="/resident/settings"
-                  onClick={() => setOpen(false)}
-                >
+                <Link href="/resident/settings" onClick={() => setOpen(false)}>
                   <div className={linkClass("/resident/settings")}>
                     <Settings size={18} />
                     Settings
@@ -186,7 +183,10 @@ export const ResidentSidebar = () => {
 
           {/* Logout */}
           <div className="p-4 border-t border-gray-300">
-            <button className="flex items-center gap-3 text-gray-500 hover:text-red-500 w-full">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 text-gray-500 hover:text-red-500 w-full"
+            >
               <LogOut size={18} />
               Log Out
             </button>

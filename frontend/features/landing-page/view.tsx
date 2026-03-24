@@ -58,7 +58,7 @@ export const View = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       
-      {/* NAVBAR */}
+    
       <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
         <h1 className="text-lg font-semibold text-blue-700">Tambayan</h1>
 
@@ -79,7 +79,7 @@ export const View = () => {
         </div>
       </nav>
 
-      {/* HERO SECTION */}
+     
       <section className="bg-linear-to-r from-blue-700 to-blue-500 text-white text-center py-16 px-4">
         <h1 className="text-3xl md:text-5xl font-bold mb-4">
           Find Your Community

@@ -36,7 +36,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Mobile Header */}
+      
       <div className="md:hidden fixed top-0 left-0 w-full bg-white shadow z-50 flex items-center justify-between p-4">
         <h1 className="text-lg font-semibold">Dashboard</h1>
         <button onClick={() => setSidebarOpen(true)}>
@@ -44,12 +44,12 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Sidebar */}
+      
       <div className="hidden md:flex md:w-64 bg-white border-r">
         <OrganizerSidebar />
       </div>
 
-      {/* Mobile Sidebar */}
+      
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 flex">
           <div
@@ -69,7 +69,6 @@ export default function Dashboard() {
       )}
 
       <main className="flex-1 p-4 md:p-6 pt-20 md:pt-6">
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <h2 className="text-2xl font-bold">Organizer Dashboard</h2>
           <Button className="bg-orange-500 hover:bg-orange-600 w-full md:w-auto">
@@ -126,7 +125,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Charts */}
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
           <Card className="lg:col-span-2 rounded-2xl shadow-sm">
             <CardContent className="p-4">
@@ -143,7 +142,6 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Table */}
         <Card className="mt-6 rounded-2xl shadow-sm">
           <CardContent className="p-4">
             <h3 className="font-semibold mb-4">Recent Events</h3>
