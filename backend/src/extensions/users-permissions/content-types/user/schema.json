@@ -84,11 +84,11 @@
       "target": "api::organiner-profile.organiner-profile",
       "mappedBy": "users_permissions_user"
     },
-    "user_role": {
+    "user_roles": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::user-role.user-role",
-      "inversedBy": "users_permissions_user"
+      "mappedBy": "users_permissions_user"
     }
   }
 }

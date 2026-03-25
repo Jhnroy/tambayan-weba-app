@@ -3,30 +3,23 @@
 import React, { useState } from "react";
 import axios from "axios";
 import type { AxiosError } from "axios";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, User, Building2 } from "lucide-react";
 import Link from "next/link";
 
-const API_URL = process.env.NEXT_PUBLIC_URL || "http://localhost:1337";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337";
 
-export const Signup = () => {
-  const [role, setRole] = useState<"resident" | "organizer">("organizer");
+// ================= TYPES =================
+type RoleType = "resident" | "organizer";
 
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
+type SignupPayload = {
+  username: string;
+  email: string;
+  password: string;
+  role: RoleType;
+};
 
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  type StrapiErrorResponse = {
+type StrapiErrorResponse = {
   data: null;
   error: {
     status: number;
@@ -35,51 +28,101 @@ export const Signup = () => {
   };
 };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (loading) return;
+// ================= API FUNCTION =================
+const registerUser = async (payload: SignupPayload) => {
+  // STEP 1: Register user
+  const res = await axios.post(`${API_URL}/api/auth/local/register`, {
+    username: payload.username,
+    email: payload.email,
+    password: payload.password,
+  });
 
-    console.log("API URL:", API_URL);
-    setLoading(true);
+  const user = res.data.user;
+  const token = res.data.jwt;
 
-    try {
-      const res = await axios.post(
-        `${API_URL}/api/auth/local/register`,
-        {
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          // role, // 👈 uncomment if your backend expects it
-        }
-      );
+  console.log("✅ USER CREATED:", user);
 
-      console.log("✅ SUCCESS:", res.data);
-      alert("Registered successfully!");
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        
-        const axiosError = err as AxiosError<StrapiErrorResponse>;
-
-        const message =
-          axiosError.response?.data?.error?.message ||
-          axiosError.message ||
-          "Registration failed";
-
-        console.error("❌ AXIOS ERROR:", axiosError.response?.data);
-        alert(message);
-      } else {
-        console.error("❌ UNKNOWN ERROR:", err);
-        alert("Something went wrong");
+  try {
+    // STEP 2: Create UserRole (FIXED)
+    const roleRes = await axios.post(
+      `${API_URL}/api/user-roles`,
+      {
+        data: {
+          name: payload.username,
+          description: `${payload.role} account`,
+          userRole: payload.role.toUpperCase(), // 🔥 FIX
+          Stats: "PENDING", // 🔥 FIX
+          users_permissions_user: user.id,
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    } finally {
-      setLoading(false);
-    }
+    );
+
+    console.log("✅ USER ROLE CREATED:", roleRes.data);
+  } catch (err: any) {
+    console.error("❌ USER ROLE ERROR:", err?.response?.data || err);
+    // hindi natin ibabagsak signup kung dito lang nagfail
+  }
+
+  return res.data;
+};
+
+// ================= COMPONENT =================
+export const Signup = () => {
+  const [role, setRole] = useState<RoleType>("organizer");
+
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const { mutate, isPending, isError, error, isSuccess } = useMutation({
+    mutationFn: registerUser,
+
+    onSuccess: (data) => {
+      console.log("✅ SUCCESS:", data);
+      alert("Registered successfully!");
+    },
+
+    onError: (err: AxiosError<StrapiErrorResponse>) => {
+      console.error("❌ REGISTER ERROR:", err);
+
+      const message =
+        err.response?.data?.error?.message ||
+        err.message ||
+        "Registration failed";
+
+      alert(message);
+    },
+  });
+
+  // ================= HANDLERS =================
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    mutate({
+      ...formData,
+      role,
+    });
+  };
+
+  // ================= UI =================
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
-        
+
         <Link
           href="/"
           className="flex items-center gap-2 font-semibold text-lg hover:opacity-80"
@@ -94,6 +137,19 @@ export const Signup = () => {
             Create your free community account
           </p>
         </div>
+
+        {isError && (
+          <p className="text-red-500 text-sm mb-4 text-center">
+            {(error as AxiosError<StrapiErrorResponse>)?.response?.data?.error
+              ?.message || "Registration failed"}
+          </p>
+        )}
+
+        {isSuccess && (
+          <p className="text-green-600 text-sm mb-4 text-center">
+            Registered successfully!
+          </p>
+        )}
 
         <p className="text-xs text-gray-500 mb-2">I AM A...</p>
 
@@ -164,10 +220,10 @@ export const Signup = () => {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={isPending}
             className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
           >
-            {loading ? "Registering..." : "Submit"}
+            {isPending ? "Registering..." : "Submit"}
           </button>
 
           <p className="text-center text-xs text-gray-500">

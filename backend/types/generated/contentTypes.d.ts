@@ -570,11 +570,13 @@ export interface ApiUserRoleUserRole extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    Stats: Schema.Attribute.Enumeration<['PENDING', 'APPROVED']>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    userRole: Schema.Attribute.Enumeration<['RESIDENT', 'ORGANIZER']>;
     users_permissions_user: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
   };
@@ -1079,8 +1081,8 @@ export interface PluginUsersPermissionsUser
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user_role: Schema.Attribute.Relation<
-      'oneToOne',
+    user_roles: Schema.Attribute.Relation<
+      'oneToMany',
       'api::user-role.user-role'
     >;
     username: Schema.Attribute.String &

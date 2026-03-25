@@ -19,9 +19,23 @@
     },
     "users_permissions_user": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "mappedBy": "user_role"
+      "inversedBy": "user_roles"
+    },
+    "userRole": {
+      "type": "enumeration",
+      "enum": [
+        "RESIDENT",
+        "ORGANIZER"
+      ]
+    },
+    "Stats": {
+      "type": "enumeration",
+      "enum": [
+        "PENDING",
+        "APPROVED"
+      ]
     }
   }
 }
