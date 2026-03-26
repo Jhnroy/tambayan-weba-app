@@ -84,24 +84,20 @@ export const Login = () => {
       const status = userRole.Stats;
       const selectedRole = role.toUpperCase();
 
-      // 🔥 ROLE VALIDATION ONLY
       if (realRole !== selectedRole) {
         alert("Wrong role selected!");
         return;
       }
-
-      // ✅ ALLOW LOGIN EVEN IF PENDING
       if (status === "PENDING") {
         alert("Your account is pending. Some features are disabled.");
       }
 
-      // ✅ SAVE AUTH
       localStorage.setItem("token", jwt);
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("role", realRole);
-      localStorage.setItem("status", status); // 🔥 important
+      localStorage.setItem("status", status);
 
-      // ✅ REDIRECT
+    
       if (realRole === "ORGANIZER") {
         window.location.href = "/organizer/dashboard";
       } else {
@@ -157,7 +153,7 @@ export const Login = () => {
             <p className="text-gray-500 text-sm">Log in to Tambayan</p>
           </div>
 
-          {/* ROLE SELECT */}
+         
           <div className="grid grid-cols-2 gap-3 mb-5">
             <button
               onClick={() => setRole("resident")}

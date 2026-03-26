@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-03-25T07:50:09.294Z"
+    "x-generation-date": "2026-03-26T03:30:44.732Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -3539,11 +3539,18 @@
               "eventType": {
                 "type": "string",
                 "enum": [
-                  "CLEANUP DRIVE",
+                  "CLEANUP",
+                  "TREE PLANTING",
+                  "RELIEF OPERATION",
+                  "BASKETBALL",
+                  "VOLLEYBALL",
+                  "MEETING",
+                  "SEMINAR",
+                  "WORKSHOP",
                   "FEEDING PROGRAM",
-                  "LIVELIHOOD SEMINAR",
                   "MEDICAL MISSION",
-                  "SPORTS"
+                  "FUNDRAISING",
+                  "COMMUNITY SERVICE"
                 ]
               },
               "slotLimit": {
@@ -3672,11 +3679,18 @@
           "eventType": {
             "type": "string",
             "enum": [
-              "CLEANUP DRIVE",
+              "CLEANUP",
+              "TREE PLANTING",
+              "RELIEF OPERATION",
+              "BASKETBALL",
+              "VOLLEYBALL",
+              "MEETING",
+              "SEMINAR",
+              "WORKSHOP",
               "FEEDING PROGRAM",
-              "LIVELIHOOD SEMINAR",
               "MEDICAL MISSION",
-              "SPORTS"
+              "FUNDRAISING",
+              "COMMUNITY SERVICE"
             ]
           },
           "slotLimit": {
@@ -4341,11 +4355,18 @@
                     "eventType": {
                       "type": "string",
                       "enum": [
-                        "CLEANUP DRIVE",
+                        "CLEANUP",
+                        "TREE PLANTING",
+                        "RELIEF OPERATION",
+                        "BASKETBALL",
+                        "VOLLEYBALL",
+                        "MEETING",
+                        "SEMINAR",
+                        "WORKSHOP",
                         "FEEDING PROGRAM",
-                        "LIVELIHOOD SEMINAR",
                         "MEDICAL MISSION",
-                        "SPORTS"
+                        "FUNDRAISING",
+                        "COMMUNITY SERVICE"
                       ]
                     },
                     "slotLimit": {
@@ -4789,6 +4810,12 @@
                         "PENDING",
                         "APPROVED"
                       ]
+                    },
+                    "position": {
+                      "type": "string"
+                    },
+                    "organizationType": {
+                      "type": "string"
                     },
                     "createdAt": {
                       "type": "string",
@@ -5814,11 +5841,18 @@
                     "eventType": {
                       "type": "string",
                       "enum": [
-                        "CLEANUP DRIVE",
+                        "CLEANUP",
+                        "TREE PLANTING",
+                        "RELIEF OPERATION",
+                        "BASKETBALL",
+                        "VOLLEYBALL",
+                        "MEETING",
+                        "SEMINAR",
+                        "WORKSHOP",
                         "FEEDING PROGRAM",
-                        "LIVELIHOOD SEMINAR",
                         "MEDICAL MISSION",
-                        "SPORTS"
+                        "FUNDRAISING",
+                        "COMMUNITY SERVICE"
                       ]
                     },
                     "slotLimit": {
@@ -6263,6 +6297,12 @@
                         "APPROVED"
                       ]
                     },
+                    "position": {
+                      "type": "string"
+                    },
+                    "organizationType": {
+                      "type": "string"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -6648,11 +6688,18 @@
               "eventType": {
                 "type": "string",
                 "enum": [
-                  "CLEANUP DRIVE",
+                  "CLEANUP",
+                  "TREE PLANTING",
+                  "RELIEF OPERATION",
+                  "BASKETBALL",
+                  "VOLLEYBALL",
+                  "MEETING",
+                  "SEMINAR",
+                  "WORKSHOP",
                   "FEEDING PROGRAM",
-                  "LIVELIHOOD SEMINAR",
                   "MEDICAL MISSION",
-                  "SPORTS"
+                  "FUNDRAISING",
+                  "COMMUNITY SERVICE"
                 ]
               },
               "slotLimit": {
@@ -7619,6 +7666,12 @@
                             "APPROVED"
                           ]
                         },
+                        "position": {
+                          "type": "string"
+                        },
+                        "organizationType": {
+                          "type": "string"
+                        },
                         "createdAt": {
                           "type": "string",
                           "format": "date-time"
@@ -8005,6 +8058,12 @@
                   "PENDING",
                   "APPROVED"
                 ]
+              },
+              "position": {
+                "type": "string"
+              },
+              "organizationType": {
+                "type": "string"
               },
               "locale": {
                 "type": "string"
@@ -8733,11 +8792,18 @@
                     "eventType": {
                       "type": "string",
                       "enum": [
-                        "CLEANUP DRIVE",
+                        "CLEANUP",
+                        "TREE PLANTING",
+                        "RELIEF OPERATION",
+                        "BASKETBALL",
+                        "VOLLEYBALL",
+                        "MEETING",
+                        "SEMINAR",
+                        "WORKSHOP",
                         "FEEDING PROGRAM",
-                        "LIVELIHOOD SEMINAR",
                         "MEDICAL MISSION",
-                        "SPORTS"
+                        "FUNDRAISING",
+                        "COMMUNITY SERVICE"
                       ]
                     },
                     "slotLimit": {
@@ -9182,6 +9248,12 @@
                         "APPROVED"
                       ]
                     },
+                    "position": {
+                      "type": "string"
+                    },
+                    "organizationType": {
+                      "type": "string"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -9344,6 +9416,12 @@
               "PENDING",
               "APPROVED"
             ]
+          },
+          "position": {
+            "type": "string"
+          },
+          "organizationType": {
+            "type": "string"
           },
           "createdAt": {
             "type": "string",

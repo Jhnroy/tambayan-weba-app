@@ -449,11 +449,18 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     description: Schema.Attribute.String;
     eventType: Schema.Attribute.Enumeration<
       [
-        'CLEANUP DRIVE',
+        'CLEANUP',
+        'TREE PLANTING',
+        'RELIEF OPERATION',
+        'BASKETBALL',
+        'VOLLEYBALL',
+        'MEETING',
+        'SEMINAR',
+        'WORKSHOP',
         'FEEDING PROGRAM',
-        'LIVELIHOOD SEMINAR',
         'MEDICAL MISSION',
-        'SPORTS',
+        'FUNDRAISING',
+        'COMMUNITY SERVICE',
       ]
     >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -569,6 +576,8 @@ export interface ApiUserRoleUserRole extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
+    organizationType: Schema.Attribute.String;
+    position: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     Stats: Schema.Attribute.Enumeration<['PENDING', 'APPROVED']>;
     updatedAt: Schema.Attribute.DateTime;

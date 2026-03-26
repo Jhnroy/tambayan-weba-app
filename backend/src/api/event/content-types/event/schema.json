@@ -26,11 +26,18 @@
     "eventType": {
       "type": "enumeration",
       "enum": [
-        "CLEANUP DRIVE",
+        "CLEANUP",
+        "TREE PLANTING",
+        "RELIEF OPERATION",
+        "BASKETBALL",
+        "VOLLEYBALL",
+        "MEETING",
+        "SEMINAR",
+        "WORKSHOP",
         "FEEDING PROGRAM",
-        "LIVELIHOOD SEMINAR",
         "MEDICAL MISSION",
-        "SPORTS"
+        "FUNDRAISING",
+        "COMMUNITY SERVICE"
       ]
     },
     "slotLimit": {

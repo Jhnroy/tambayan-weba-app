@@ -36,6 +36,12 @@
         "PENDING",
         "APPROVED"
       ]
+    },
+    "position": {
+      "type": "string"
+    },
+    "organizationType": {
+      "type": "string"
     }
   }
 }
