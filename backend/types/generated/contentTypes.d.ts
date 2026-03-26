@@ -461,6 +461,7 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
         'MEDICAL MISSION',
         'FUNDRAISING',
         'COMMUNITY SERVICE',
+        'SPORTS',
       ]
     >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -473,7 +474,7 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     >;
     publishedAt: Schema.Attribute.DateTime;
     slotLimit: Schema.Attribute.Integer;
-    stats: Schema.Attribute.Enumeration<['ACTIVE', 'CANCELLED']>;
+    stats: Schema.Attribute.Enumeration<['ACTIVE', 'CANCELLED', 'COMPLETED']>;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

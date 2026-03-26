@@ -37,7 +37,8 @@
         "FEEDING PROGRAM",
         "MEDICAL MISSION",
         "FUNDRAISING",
-        "COMMUNITY SERVICE"
+        "COMMUNITY SERVICE",
+        "SPORTS"
       ]
     },
     "slotLimit": {
@@ -50,7 +51,8 @@
       "type": "enumeration",
       "enum": [
         "ACTIVE",
-        "CANCELLED"
+        "CANCELLED",
+        "COMPLETED"
       ]
     },
     "users_permissions_user": {

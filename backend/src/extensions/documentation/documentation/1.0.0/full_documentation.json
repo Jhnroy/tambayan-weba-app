@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-03-26T03:30:44.732Z"
+    "x-generation-date": "2026-03-26T06:59:15.475Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -3550,7 +3550,8 @@
                   "FEEDING PROGRAM",
                   "MEDICAL MISSION",
                   "FUNDRAISING",
-                  "COMMUNITY SERVICE"
+                  "COMMUNITY SERVICE",
+                  "SPORTS"
                 ]
               },
               "slotLimit": {
@@ -3563,7 +3564,8 @@
                 "type": "string",
                 "enum": [
                   "ACTIVE",
-                  "CANCELLED"
+                  "CANCELLED",
+                  "COMPLETED"
                 ]
               },
               "users_permissions_user": {
@@ -3690,7 +3692,8 @@
               "FEEDING PROGRAM",
               "MEDICAL MISSION",
               "FUNDRAISING",
-              "COMMUNITY SERVICE"
+              "COMMUNITY SERVICE",
+              "SPORTS"
             ]
           },
           "slotLimit": {
@@ -3703,7 +3706,8 @@
             "type": "string",
             "enum": [
               "ACTIVE",
-              "CANCELLED"
+              "CANCELLED",
+              "COMPLETED"
             ]
           },
           "users_permissions_user": {
@@ -4366,7 +4370,8 @@
                         "FEEDING PROGRAM",
                         "MEDICAL MISSION",
                         "FUNDRAISING",
-                        "COMMUNITY SERVICE"
+                        "COMMUNITY SERVICE",
+                        "SPORTS"
                       ]
                     },
                     "slotLimit": {
@@ -4379,7 +4384,8 @@
                       "type": "string",
                       "enum": [
                         "ACTIVE",
-                        "CANCELLED"
+                        "CANCELLED",
+                        "COMPLETED"
                       ]
                     },
                     "users_permissions_user": {
@@ -5852,7 +5858,8 @@
                         "FEEDING PROGRAM",
                         "MEDICAL MISSION",
                         "FUNDRAISING",
-                        "COMMUNITY SERVICE"
+                        "COMMUNITY SERVICE",
+                        "SPORTS"
                       ]
                     },
                     "slotLimit": {
@@ -5865,7 +5872,8 @@
                       "type": "string",
                       "enum": [
                         "ACTIVE",
-                        "CANCELLED"
+                        "CANCELLED",
+                        "COMPLETED"
                       ]
                     },
                     "users_permissions_user": {
@@ -6699,7 +6707,8 @@
                   "FEEDING PROGRAM",
                   "MEDICAL MISSION",
                   "FUNDRAISING",
-                  "COMMUNITY SERVICE"
+                  "COMMUNITY SERVICE",
+                  "SPORTS"
                 ]
               },
               "slotLimit": {
@@ -6712,7 +6721,8 @@
                 "type": "string",
                 "enum": [
                   "ACTIVE",
-                  "CANCELLED"
+                  "CANCELLED",
+                  "COMPLETED"
                 ]
               },
               "users_permissions_user": {
@@ -8803,7 +8813,8 @@
                         "FEEDING PROGRAM",
                         "MEDICAL MISSION",
                         "FUNDRAISING",
-                        "COMMUNITY SERVICE"
+                        "COMMUNITY SERVICE",
+                        "SPORTS"
                       ]
                     },
                     "slotLimit": {
@@ -8816,7 +8827,8 @@
                       "type": "string",
                       "enum": [
                         "ACTIVE",
-                        "CANCELLED"
+                        "CANCELLED",
+                        "COMPLETED"
                       ]
                     },
                     "users_permissions_user": {

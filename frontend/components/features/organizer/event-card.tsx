@@ -4,6 +4,7 @@ import { useState } from "react";
 
 interface Event {
   title: string;
+  description?: string;
   status: "Pending" | "Completed" | "Upcoming";
   date: string;
   type: string;
@@ -13,7 +14,6 @@ interface Event {
 export const EventCard = ({ event }: { event: Event }) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
- 
   const getProgress = () => {
     if (typeof event.slots === "string" && event.slots.includes("/")) {
       const [taken, total] = event.slots.split("/").map(Number);
@@ -26,12 +26,26 @@ export const EventCard = ({ event }: { event: Event }) => {
 
   return (
     <div className="bg-white p-4 rounded-xl shadow space-y-3">
-      {/* Header */}
-      <div className="flex justify-between items-start">
-        <h2 className="font-semibold text-sm">{event.title}</h2>
+      
+      {/* 🔥 HEADER (IMPROVED) */}
+      <div className="flex justify-between items-start gap-3">
+        
+        {/* LEFT SIDE */}
+        <div className="flex-1">
+          {/* Title */}
+          <h2 className="font-semibold text-base leading-tight">
+            {event.title}
+          </h2>
 
+          {/* Description */}
+          <p className="text-sm text-gray-600 mt-1 line-clamp-3">
+            {event.description || "No description available"}
+          </p>
+        </div>
+
+        {/* RIGHT SIDE (STATUS) */}
         <span
-          className={`text-xs px-2 py-1 rounded-full ${
+          className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ${
             event.status === "Completed"
               ? "bg-green-100 text-green-700"
               : event.status === "Pending"
@@ -43,11 +57,10 @@ export const EventCard = ({ event }: { event: Event }) => {
         </span>
       </div>
 
-     
+      {/* Date */}
       <div className="text-xs text-gray-500">{event.date}</div>
-      
 
-      
+      {/* Type */}
       <span className="inline-block bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs">
         {event.type}
       </span>
