@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-03-26T06:59:15.475Z"
+    "x-generation-date": "2026-03-26T13:33:41.978Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -4429,7 +4429,8 @@
                             "enum": [
                               "UPCOMING",
                               "ATTENDED",
-                              "COMPLETED"
+                              "COMPLETED",
+                              "JOINED"
                             ]
                           },
                           "event": {
@@ -5917,7 +5918,8 @@
                             "enum": [
                               "UPCOMING",
                               "ATTENDED",
-                              "COMPLETED"
+                              "COMPLETED",
+                              "JOINED"
                             ]
                           },
                           "event": {
@@ -6559,7 +6561,8 @@
                 "enum": [
                   "UPCOMING",
                   "ATTENDED",
-                  "COMPLETED"
+                  "COMPLETED",
+                  "JOINED"
                 ]
               },
               "event": {
@@ -6661,7 +6664,8 @@
             "enum": [
               "UPCOMING",
               "ATTENDED",
-              "COMPLETED"
+              "COMPLETED",
+              "JOINED"
             ]
           },
           "event": {
@@ -7384,7 +7388,8 @@
                           "enum": [
                             "UPCOMING",
                             "ATTENDED",
-                            "COMPLETED"
+                            "COMPLETED",
+                            "JOINED"
                           ]
                         },
                         "event": {
@@ -8872,7 +8877,8 @@
                             "enum": [
                               "UPCOMING",
                               "ATTENDED",
-                              "COMPLETED"
+                              "COMPLETED",
+                              "JOINED"
                             ]
                           },
                           "event": {

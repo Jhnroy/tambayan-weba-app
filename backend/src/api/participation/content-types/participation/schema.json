@@ -16,7 +16,8 @@
       "enum": [
         "UPCOMING",
         "ATTENDED",
-        "COMPLETED"
+        "COMPLETED",
+        "JOINED"
       ]
     },
     "event": {

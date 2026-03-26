@@ -544,7 +544,9 @@ export interface ApiParticipationParticipation
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    Stats: Schema.Attribute.Enumeration<['UPCOMING', 'ATTENDED', 'COMPLETED']>;
+    Stats: Schema.Attribute.Enumeration<
+      ['UPCOMING', 'ATTENDED', 'COMPLETED', 'JOINED']
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

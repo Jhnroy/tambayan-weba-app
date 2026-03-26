@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import axios from "axios";
 import {
   Home,
   Calendar,
@@ -16,8 +17,18 @@ import {
   X,
 } from "lucide-react";
 
+type UserType = {
+  username?: string;
+  email?: string;
+  userRole?: {
+    userRole?: string;
+  };
+};
+
 export const ResidentSidebar = () => {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<UserType | null>(null);
+
   const pathname = usePathname();
   const router = useRouter();
 
@@ -28,15 +39,35 @@ export const ResidentSidebar = () => {
         : "text-gray-600 hover:bg-gray-200"
     }`;
 
+  // ✅ Fetch Logged-in User
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (!token) return;
+
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/me?populate=*`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setUser(res.data);
+      } catch (err) {
+        console.error("Failed to fetch user:", err);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   // ✅ Logout Function
   const handleLogout = () => {
-    // Clear auth data (example: token in localStorage)
     localStorage.removeItem("token");
-
-    // Optional: clear all storage
-    // localStorage.clear();
-
-    // Redirect to login page
     router.push("/login");
   };
 
@@ -73,17 +104,22 @@ export const ResidentSidebar = () => {
 
         <div className="flex flex-col h-full justify-between border-r border-gray-300">
           <div>
-            {/* Profile */}
+            {/* ✅ Profile (DYNAMIC) */}
             <div className="p-6 flex flex-col items-center border-b border-gray-300">
               <div className="w-16 h-16 rounded-full border-2 border-blue-500 flex items-center justify-center mb-2">
                 <User className="text-blue-500" />
               </div>
-              <h2 className="font-semibold text-gray-800">Maria Santos</h2>
+
+              <h2 className="font-semibold text-gray-800">
+                {user?.username || "Loading..."}
+              </h2>
+
               <p className="text-sm text-gray-500">
-                Brgy. Sta. Cruz, Resident
+                {user?.email || "Resident"}
               </p>
+
               <span className="mt-2 text-xs font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">
-                VOLUNTEER
+                {user?.userRole?.userRole || "RESIDENT"}
               </span>
             </div>
 
@@ -108,6 +144,7 @@ export const ResidentSidebar = () => {
               <p className="text-xs text-gray-400 font-semibold mt-6 mb-2">
                 MY ACTIVITY
               </p>
+
               <ul className="space-y-1">
                 <Link href="/resident/my-signups" onClick={() => setOpen(false)}>
                   <div
@@ -151,6 +188,7 @@ export const ResidentSidebar = () => {
               <p className="text-xs text-gray-400 font-semibold mt-6 mb-2">
                 ACCOUNT
               </p>
+
               <ul className="space-y-1">
                 <Link
                   href="/resident/notifications"
@@ -181,7 +219,7 @@ export const ResidentSidebar = () => {
             </div>
           </div>
 
-          {/* Logout */}
+   
           <div className="p-4 border-t border-gray-300">
             <button
               onClick={handleLogout}
