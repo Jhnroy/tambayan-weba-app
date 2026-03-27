@@ -1,79 +1,96 @@
-'use client';
+"use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import API from "@/lib/api";
+
+/* ================= TYPES ================= */
+
+type Event = {
+  id: number;
+  title: string;
+  dateTime: string;
+  location: string;
+  eventType: string;
+  slotLimit: number;
+  availableSlots: number;
+};
+
+/* ================= HELPERS ================= */
+
+const getCategoryColor = (type: string) => {
+  switch (type) {
+    case "CLEANUP":
+      return "bg-green-300";
+    case "FEEDING PROGRAM":
+      return "bg-yellow-300";
+    case "SEMINAR":
+      return "bg-blue-300";
+    case "MEDICAL MISSION":
+      return "bg-purple-300";
+    case "BASKETBALL":
+      return "bg-pink-300";
+    default:
+      return "bg-gray-300";
+  }
+};
+
+const formatDate = (date: string) => {
+  try {
+    return new Date(date).toLocaleString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  } catch {
+    return "Invalid date";
+  }
+};
+
+/* ================= COMPONENT ================= */
 
 export const View = () => {
-  const events = [
-    {
-      category: "Clean-up",
-      title: "Barangay Clean-Up Drive — Purok 3",
-      date: "Sun, Nov 12 • 8:00 AM",
-      progress: 80,
-      slots: 12,
-      color: "bg-green-300",
-    },
-    {
-      category: "Feeding",
-      title: "Feeding Program for 30 Children",
-      date: "Wed, Nov 15 • 7:00 AM",
-      progress: 40,
-      slots: 25,
-      color: "bg-yellow-300",
-    },
-    {
-      category: "Seminar",
-      title: "Livelihood Seminar: Handicrafts",
-      date: "Sat, Nov 18 • 9:00 AM",
-      progress: 60,
-      slots: 20,
-      color: "bg-blue-300",
-    },
-    {
-      category: "Medical",
-      title: "Free Medical Mission",
-      date: "Tue, Nov 21 • 6:00 AM",
-      progress: 100,
-      slots: 0,
-      color: "bg-purple-300",
-    },
-    {
-      category: "Cultural",
-      title: "Basketball League — Barangay Cup",
-      date: "Sun, Nov 26 • 2:00 PM",
-      progress: 90,
-      slots: 10,
-      color: "bg-pink-300",
-    },
-    {
-      category: "Livelihood",
-      title: "Soap Making Program",
-      date: "Thu, Nov 30 • 8:00 AM",
-      progress: 50,
-      slots: 15,
-      color: "bg-yellow-200",
-    },
-  ];
+  const [search, setSearch] = useState("");
 
+  /* ================= FETCH EVENTS ================= */
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["events"],
+    queryFn: async () => {
+      const res = await API.get("/api/events");
+      return res.data.data;
+    },
+  });
+
+  /* ================= FILTER ================= */
+
+  const filteredEvents = data?.filter((item: any) => {
+    const event: Event = item;
+
+    const keyword = search.toLowerCase();
+
+    return (
+      event.title?.toLowerCase().includes(keyword) ||
+      event.eventType?.toLowerCase().includes(keyword) ||
+      event.location?.toLowerCase().includes(keyword)
+    );
+  });
+  
   return (
     <div className="min-h-screen bg-gray-100">
       
-    
+      
       <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-sm">
         <h1 className="text-lg font-semibold text-blue-700">Tambayan</h1>
 
         <div className="flex gap-3">
-          <Link
-            href="/login"
-            className="px-4 py-1 border rounded-md text-sm hover:bg-gray-100"
-          >
+          <Link href="/login" className="px-4 py-1 border rounded-md text-sm hover:bg-gray-100">
             Log in
           </Link>
-
-          <Link
-            href="/signup"
-            className="px-4 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
-          >
+          <Link href="/signup" className="px-4 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700">
             Sign up
           </Link>
         </div>
@@ -86,99 +103,97 @@ export const View = () => {
         </h1>
 
         <p className="max-w-xl mx-auto text-sm md:text-base mb-6">
-          Discover volunteer opportunities and community events in your
-          barangay. Sign up in one tap — confirmed by SMS.
+          Discover volunteer opportunities and community events in your barangay.
         </p>
 
         <div className="flex justify-center gap-4">
-          <Link
-            href="/signup"
-            className="bg-yellow-400 text-black px-5 py-2 rounded-full font-medium hover:bg-yellow-300"
-          >
+          <Link href="/signup" className="bg-yellow-400 text-black px-5 py-2 rounded-full font-medium hover:bg-yellow-300">
             Join as Resident
           </Link>
 
-          <Link
-            href="/login"
-            className="bg-white text-blue-600 px-5 py-2 rounded-full font-medium hover:bg-gray-200"
-          >
+          <Link href="/login" className="bg-white text-blue-600 px-5 py-2 rounded-full font-medium hover:bg-gray-200">
             Log in
           </Link>
         </div>
       </section>
 
-      {/* SEARCH & FILTER */}
+      
       <div className="px-4 md:px-10 mt-6">
-        <div className="flex flex-col md:flex-row gap-4 items-center">
-          <input
-            type="text"
-            placeholder="Search events..."
-            className="w-full md:w-1/3 px-4 py-2 border rounded-full outline-none"
-          />
-
-          <div className="flex flex-wrap gap-2">
-            {[
-              "All Events",
-              "Clean-up",
-              "Feeding",
-              "Seminar",
-              "Medical",
-              "Livelihood",
-              "Cultural",
-            ].map((item, index) => (
-              <button
-                key={index}
-                className="px-3 py-1 text-sm bg-white border rounded-full hover:bg-gray-200"
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </div>
+        <input
+          type="text"
+          placeholder="Search events..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full md:w-1/3 px-4 py-2 border rounded-full outline-none"
+        />
       </div>
 
-      {/* EVENT CARDS */}
+    
       <div className="px-4 md:px-10 py-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {events.map((event, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition"
-          >
-            
+        
+        {isLoading && <p>Loading events...</p>}
+        {error && <p>Failed to load events</p>}
+
+        {!isLoading && filteredEvents?.length === 0 && (
+          <p>No matching events</p>
+        )}
+
+        {filteredEvents?.map((item: any) => {
+          const event: Event = item;
+
+          const takenSlots =
+            (event.slotLimit || 0) - (event.availableSlots || 0);
+
+          const progress =
+            event.slotLimit > 0
+              ? (takenSlots / event.slotLimit) * 100
+              : 0;
+
+          return (
             <div
-              className={`h-28 ${event.color} flex items-center justify-center text-white`}
+              key={event.id}
+              className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition"
             >
-              <span className="text-sm font-semibold">
-                {event.category}
-              </span>
-            </div>
-
-            <div className="p-4">
-              <h2 className="font-semibold text-sm mb-1">
-                {event.title}
-              </h2>
-
-              <p className="text-xs text-gray-500 mb-2">
-                {event.date}
-              </p>
-
-              <p className="text-xs text-gray-400 mb-2">
-                Purok 3, Brgy. Holy Spirit, QC
-              </p>
-
-              <div className="w-full bg-gray-200 h-1 rounded-full">
-                <div
-                  className="bg-green-300 h-1 rounded-full mt-1"
-                  style={{ width: `${event.progress}%` }}
-                ></div>
+            
+              <div
+                className={`h-28 ${getCategoryColor(
+                  event.eventType
+                )} flex items-center justify-center text-white`}
+              >
+                <span className="text-sm font-semibold">
+                  {event.eventType || "Event"}
+                </span>
               </div>
 
-              <p className="text-xs text-gray-400 mt-1">
-                {event.slots} slots left
-              </p>
+             
+              <div className="p-4">
+                <h2 className="font-semibold text-sm mb-1">
+                  {event.title || "No title"}
+                </h2>
+
+                <p className="text-xs text-gray-500 mb-2">
+                  {formatDate(event.dateTime)}
+                </p>
+
+                <p className="text-xs text-gray-400 mb-2">
+                  {event.location || "No location"}
+                </p>
+
+                
+                <div className="w-full bg-gray-200 h-1 rounded-full">
+                  <div
+                    className="bg-green-300 h-1 rounded-full mt-1"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+
+                <p className="text-xs text-gray-400 mt-1">
+                  {event.availableSlots} slots left
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

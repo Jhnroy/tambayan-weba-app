@@ -35,13 +35,11 @@ type StrapiResponse<T> = {
 type StrapiError = {
   error?: {
     message?: string;
-    details?: any;
   };
 };
 
 /* ================= CONSTANTS ================= */
 
-// UI VALUES
 const EVENT_TYPES = [
   "Cleanup",
   "Tree Planting",
@@ -57,7 +55,6 @@ const EVENT_TYPES = [
   "Community Service",
 ];
 
-// MAP → STRAPI ENUM
 const EVENT_TYPE_MAP: Record<string, string> = {
   "Cleanup": "CLEANUP",
   "Tree Planting": "TREE PLANTING",
@@ -76,8 +73,6 @@ const EVENT_TYPE_MAP: Record<string, string> = {
 /* ================= COMPONENT ================= */
 
 export const CreateEvent = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -86,69 +81,52 @@ export const CreateEvent = () => {
     location: "",
     eventType: "Cleanup",
     slotLimit: "",
-    stats: "ACTIVE", // ✅ default
+    stats: "ACTIVE",
   });
 
   const [user, setUser] = useState<any>(null);
 
-  /* ================= GET USER ================= */
-
   useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        const parsed = JSON.parse(storedUser);
-        setUser(parsed);
-      }
-    } catch {
-      console.error("Invalid user in storage");
-    }
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
 
-  /* ================= FETCH ROLE ================= */
+  
 
   const { data: roleData, isLoading } = useQuery<UserRole | null>({
     queryKey: ["user-role", user?.id],
     enabled: !!user?.id,
     queryFn: async () => {
-      try {
-        const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-        const res = await API.get<StrapiResponse<UserRole>>(
-          `/api/user-roles?filters[users_permissions_user][id][$eq]=${user.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+      const res = await API.get<StrapiResponse<UserRole>>(
+        `/api/user-roles?filters[users_permissions_user][id][$eq]=${user.id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-        return res.data.data?.[0] ?? null;
-      } catch (err) {
-        console.error("Role fetch error:", err);
-        return null;
-      }
+      return res.data.data?.[0] ?? null;
     },
   });
 
-  /* ================= PERMISSIONS ================= */
+  const canCreateEvent =
+    roleData?.Stats === "APPROVED" &&
+    roleData?.userRole === "ORGANIZER";
 
-  const isApproved = roleData?.Stats === "APPROVED";
-  const isOrganizer = roleData?.userRole === "ORGANIZER";
-  const canCreateEvent = isApproved && isOrganizer;
 
-  /* ================= HANDLERS ================= */
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (e: any) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  /* ================= MUTATION ================= */
+
+  const slotNumber = Number(form.slotLimit) || 0;
+  const formattedDateTime =
+    form.date && form.time
+      ? new Date(`${form.date}T${form.time}`).toLocaleString()
+      : "Not set";
+
+ 
 
   const { mutate, isPending } = useMutation<
     any,
@@ -161,79 +139,40 @@ export const CreateEvent = () => {
       return API.post(
         "/api/events",
         { data: payload },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
     },
-
     onSuccess: () => {
       alert("Event created successfully!");
       window.location.reload();
     },
-
     onError: (err) => {
-      console.error("FULL ERROR:", err);
-
-      if (err.response) {
-        console.error("STATUS:", err.response.status);
-        console.error("DATA:", err.response.data);
-      }
-
-      alert(
-        err.response?.data?.error?.message ||
-        err.message ||
-        "Failed to create event"
-      );
+      alert(err.response?.data?.error?.message || "Failed to create event");
     },
   });
 
-  /* ================= SUBMIT ================= */
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!canCreateEvent) {
-      alert("Only approved organizers can create events.");
-      return;
-    }
-
-    if (!user?.id) {
-      alert("User not found");
-      return;
-    }
+    if (!canCreateEvent) return alert("Not allowed");
 
     const dateTime = new Date(`${form.date}T${form.time}`);
 
-    if (isNaN(dateTime.getTime())) {
-      alert("Invalid date/time");
-      return;
-    }
+    if (isNaN(dateTime.getTime()))
+      return alert("Invalid date/time");
 
-    const slot = Number(form.slotLimit);
-
-    if (!slot || slot <= 0) {
-      alert("Invalid slot limit");
-      return;
-    }
-
-    const mappedEventType = EVENT_TYPE_MAP[form.eventType];
-
-    if (!mappedEventType) {
-      alert("Invalid event type");
-      return;
-    }
+    if (slotNumber <= 0)
+      return alert("Slot must be greater than 0");
 
     const payload: EventPayload = {
       title: form.title,
       description: form.description,
       dateTime: dateTime.toISOString(),
       location: form.location,
-      eventType: mappedEventType,
-      slotLimit: slot,
-      availableSlots: slot,
+      eventType: EVENT_TYPE_MAP[form.eventType],
+      slotLimit: slotNumber,
+      availableSlots: slotNumber,
       stats: form.stats,
       users_permissions_user: {
         connect: [{ id: user.id }],
@@ -243,11 +182,9 @@ export const CreateEvent = () => {
     mutate(payload);
   };
 
-  /* ================= UI ================= */
 
-  if (!user || isLoading) {
-    return <p className="p-4">Loading...</p>;
-  }
+
+  if (!user || isLoading) return <p className="p-4">Loading...</p>;
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -256,7 +193,9 @@ export const CreateEvent = () => {
       </div>
 
       <div className="flex-1 p-4 md:p-8">
-        <h1 className="text-2xl font-semibold mb-4">Create New Event</h1>
+        <h1 className="text-2xl font-semibold mb-4">
+          Create New Event
+        </h1>
 
         {!canCreateEvent && (
           <div className="mb-4 p-3 bg-yellow-100 text-yellow-700 rounded">
@@ -265,105 +204,53 @@ export const CreateEvent = () => {
         )}
 
         <div className="bg-white rounded-xl shadow p-6 max-w-3xl relative">
-          {!canCreateEvent && (
-            <div className="absolute inset-0 bg-white/60 z-10 rounded-xl"></div>
-          )}
-
           <form className="space-y-4" onSubmit={handleSubmit}>
-            <input
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-              placeholder="Event Title"
-              disabled={!canCreateEvent}
-              required
-            />
+            
+            <input name="title" value={form.title} onChange={handleChange}
+              className="w-full border p-2 rounded" placeholder="Event Title" required />
 
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              className="w-full border p-2 rounded"
-              placeholder="Description"
-              disabled={!canCreateEvent}
-              required
-            />
+            <textarea name="description" value={form.description} onChange={handleChange}
+              className="w-full border p-2 rounded" placeholder="Description" required />
 
             <div className="grid grid-cols-2 gap-4">
-              <select
-                name="eventType"
-                value={form.eventType}
-                onChange={handleChange}
-                className="border p-2 rounded"
-                disabled={!canCreateEvent}
-              >
-                {EVENT_TYPES.map((type) => (
-                  <option key={type}>{type}</option>
-                ))}
+              <select name="eventType" value={form.eventType} onChange={handleChange}
+                className="border p-2 rounded">
+                {EVENT_TYPES.map((t) => <option key={t}>{t}</option>)}
               </select>
 
-              <input
-                type="number"
-                name="slotLimit"
-                value={form.slotLimit}
+              <input type="number" name="slotLimit" value={form.slotLimit}
                 onChange={handleChange}
                 className="border p-2 rounded"
-                disabled={!canCreateEvent}
-                required
-              />
+                placeholder="Slots"
+                required />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <input
-                type="date"
-                name="date"
-                value={form.date}
-                onChange={handleChange}
-                className="border p-2 rounded"
-                disabled={!canCreateEvent}
-                required
-              />
-              <input
-                type="time"
-                name="time"
-                value={form.time}
-                onChange={handleChange}
-                className="border p-2 rounded"
-                disabled={!canCreateEvent}
-                required
-              />
+              <input type="date" name="date" value={form.date}
+                onChange={handleChange} className="border p-2 rounded" required />
+
+              <input type="time" name="time" value={form.time}
+                onChange={handleChange} className="border p-2 rounded" required />
             </div>
 
-            <input
-              name="location"
-              value={form.location}
+            <input name="location" value={form.location}
               onChange={handleChange}
               className="w-full border p-2 rounded"
-              placeholder="Location"
-              disabled={!canCreateEvent}
-              required
-            />
+              placeholder="Location" required />
 
-            
-            <select
-              name="stats"
-              value={form.stats}
+            <select name="stats" value={form.stats}
               onChange={handleChange}
-              className="border p-2 rounded"
-              disabled={!canCreateEvent}
-            >
+              className="border p-2 rounded">
               <option value="ACTIVE">ACTIVE</option>
               <option value="CANCELLED">CANCELLED</option>
             </select>
 
-            <button
-              type="submit"
+            <button type="submit"
               disabled={!canCreateEvent || isPending}
-              className="bg-orange-500 text-white px-4 py-2 rounded"
-            >
+              className="bg-orange-500 text-white px-4 py-2 rounded">
               {isPending ? "Creating..." : "Publish Event"}
             </button>
+
           </form>
         </div>
       </div>

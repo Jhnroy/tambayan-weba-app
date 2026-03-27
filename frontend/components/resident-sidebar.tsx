@@ -39,7 +39,7 @@ export const ResidentSidebar = () => {
         : "text-gray-600 hover:bg-gray-200"
     }`;
 
-  // ✅ Fetch Logged-in User
+  // Fetch Logged-in User
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -65,7 +65,7 @@ export const ResidentSidebar = () => {
     fetchUser();
   }, []);
 
-  // ✅ Logout Function
+  // Logout Function
   const handleLogout = () => {
     localStorage.removeItem("token");
     router.push("/login");
@@ -104,7 +104,7 @@ export const ResidentSidebar = () => {
 
         <div className="flex flex-col h-full justify-between border-r border-gray-300">
           <div>
-            {/* ✅ Profile (DYNAMIC) */}
+
             <div className="p-6 flex flex-col items-center border-b border-gray-300">
               <div className="w-16 h-16 rounded-full border-2 border-blue-500 flex items-center justify-center mb-2">
                 <User className="text-blue-500" />
@@ -146,7 +146,7 @@ export const ResidentSidebar = () => {
               </p>
 
               <ul className="space-y-1">
-                <Link href="/resident/my-signups" onClick={() => setOpen(false)}>
+                {/* <Link href="/resident/my-signups" onClick={() => setOpen(false)}>
                   <div
                     className={`flex items-center justify-between ${linkClass(
                       "/resident/my-signups"
@@ -160,7 +160,7 @@ export const ResidentSidebar = () => {
                       2
                     </span>
                   </div>
-                </Link>
+                </Link> */}
 
                 <Link
                   href="/resident/participation-history"

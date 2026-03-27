@@ -63,6 +63,24 @@ export const ResidentParticipationHistory = () => {
     fetchData();
   }, [user]);
 
+  // ✅ EVENT STATUS FUNCTION
+  const getEventStatus = (dateTime: string) => {
+    if (!dateTime) return "Unknown";
+
+    const now = new Date();
+    const eventDate = new Date(dateTime);
+
+    if (eventDate > now) return "Upcoming";
+
+    // OPTIONAL: same day = ongoing
+    const isSameDay =
+      eventDate.toDateString() === now.toDateString();
+
+    if (isSameDay) return "Ongoing";
+
+    return "Past";
+  };
+
   // ✅ SEARCH FILTER
   const filtered = data.filter((item) =>
     item.event?.title?.toLowerCase().includes(search.toLowerCase())
@@ -102,38 +120,58 @@ export const ResidentParticipationHistory = () => {
           <p className="text-gray-500">No participation yet.</p>
         ) : (
           <div className="grid gap-4">
-            {filtered.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-xl shadow-sm p-4 border hover:shadow-md transition"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-gray-800">
-                      {item.event?.title || "Untitled Event"}
-                    </h3>
+            {filtered.map((item) => {
+              const status = getEventStatus(item.event?.dateTime);
 
-                    <p className="text-sm text-gray-500 mt-1">
-                      {new Date(item.event?.dateTime).toLocaleString()}
-                    </p>
+              return (
+                <div
+                  key={item.id}
+                  className="bg-white rounded-xl shadow-sm p-4 border hover:shadow-md transition"
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-semibold text-gray-800">
+                        {item.event?.title || "Untitled Event"}
+                      </h3>
 
-                    <p className="text-sm text-gray-500">
-                      {item.event?.location}
-                    </p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {new Date(item.event?.dateTime).toLocaleString()}
+                      </p>
+
+                      <p className="text-sm text-gray-500">
+                        {item.event?.location}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-1">
+                      {/* JOIN STATUS */}
+                      <span
+                        className={`text-xs px-2 py-1 rounded-full font-medium ${
+                          item.Stats === "JOINED"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-gray-200 text-gray-600"
+                        }`}
+                      >
+                        {item.Stats}
+                      </span>
+
+                      {/* EVENT STATUS */}
+                      <span
+                        className={`text-[10px] px-2 py-1 rounded-full font-medium ${
+                          status === "Upcoming"
+                            ? "bg-blue-100 text-blue-700"
+                            : status === "Ongoing"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : "bg-gray-200 text-gray-600"
+                        }`}
+                      >
+                        {status}
+                      </span>
+                    </div>
                   </div>
-
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full font-medium ${
-                      item.Stats === "JOINED"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-gray-200 text-gray-600"
-                    }`}
-                  >
-                    {item.Stats}
-                  </span>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

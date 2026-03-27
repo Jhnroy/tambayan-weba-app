@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 type Event = {
@@ -42,11 +42,10 @@ export const EventCard = ({ event }: Props) => {
 
   const [loading, setLoading] = useState(false);
   const [joined, setJoined] = useState(false);
-
-  // ✅ LOCAL SLOT STATE (IMPORTANT)
+  const [checking, setChecking] = useState(true);
   const [localSlots, setLocalSlots] = useState(event.slots);
 
-  // ✅ SLOT LOGIC
+  // SLOT LOGIC
   const [taken, total] = (() => {
     if (!localSlots || !localSlots.includes("/")) return [0, 1];
 
@@ -62,6 +61,56 @@ export const EventCard = ({ event }: Props) => {
   const style = categoryStyles[event.category] || categoryStyles.Other;
   const isFull = taken >= total;
 
+  // ✅ AUTO CHECK IF ALREADY JOINED
+  useEffect(() => {
+    const checkIfJoined = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        let eventId = event.id;
+
+        // resolve documentId
+        if (!eventId && event.documentId) {
+          const res = await axios.get(
+            `${API_URL}/api/events?filters[documentId][$eq]=${event.documentId}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          eventId = res.data.data?.[0]?.id;
+        }
+
+        if (!eventId) return;
+
+        // get user
+        const userRes = await axios.get(`${API_URL}/api/users/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const userId = userRes.data.id;
+
+        // check participation
+        const existing = await axios.get(
+          `${API_URL}/api/participations?filters[event][id][$eq]=${eventId}&filters[users_permissions_user][id][$eq]=${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (existing.data.data.length > 0) {
+          setJoined(true);
+        }
+      } catch (err) {
+        console.error("Check joined error:", err);
+      } finally {
+        setChecking(false);
+      }
+    };
+
+    checkIfJoined();
+  }, [event, API_URL]);
+
   const handleSignup = async () => {
     try {
       setLoading(true);
@@ -75,7 +124,6 @@ export const EventCard = ({ event }: Props) => {
 
       let eventId = event.id;
 
-      // ✅ fallback via documentId
       if (!eventId && event.documentId) {
         const res = await axios.get(
           `${API_URL}/api/events?filters[documentId][$eq]=${event.documentId}`,
@@ -84,10 +132,7 @@ export const EventCard = ({ event }: Props) => {
           }
         );
 
-        const eventData = res.data.data[0];
-        if (!eventData) throw new Error("Event not found");
-
-        eventId = eventData.id;
+        eventId = res.data.data?.[0]?.id;
       }
 
       if (!eventId) {
@@ -95,23 +140,33 @@ export const EventCard = ({ event }: Props) => {
         return;
       }
 
-      // ✅ get user
-      let userId = null;
-      try {
-        const userRes = await axios.get(`${API_URL}/api/users/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        userId = userRes.data.id;
-      } catch {}
+      const userRes = await axios.get(`${API_URL}/api/users/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      // ✅ CREATE PARTICIPATION
+      const userId = userRes.data.id;
+
+      // double safety check
+      const existing = await axios.get(
+        `${API_URL}/api/participations?filters[event][id][$eq]=${eventId}&filters[users_permissions_user][id][$eq]=${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (existing.data.data.length > 0) {
+        alert("Already signed up");
+        setJoined(true);
+        return;
+      }
+
       await axios.post(
         `${API_URL}/api/participations`,
         {
           data: {
             event: eventId,
             Stats: "JOINED",
-            ...(userId && { users_permissions_user: userId }),
+            users_permissions_user: userId,
           },
         },
         {
@@ -119,15 +174,10 @@ export const EventCard = ({ event }: Props) => {
         }
       );
 
-      // 🔥 OPTIMISTIC SLOT UPDATE (UI ONLY)
       const newTaken = taken + 1;
       setLocalSlots(`${newTaken}/${total}`);
-
       setJoined(true);
     } catch (err: any) {
-      console.error("FULL ERROR:", err);
-      console.error("DATA:", err?.response?.data);
-
       alert(
         err?.response?.data?.error?.message ||
           err?.response?.data?.message ||
@@ -178,7 +228,7 @@ export const EventCard = ({ event }: Props) => {
 
         <button
           onClick={handleSignup}
-          disabled={isFull || loading || joined}
+          disabled={isFull || loading || joined || checking}
           className={`text-[11px] px-3 py-1 rounded-md w-full transition
             ${
               isFull || joined
@@ -187,7 +237,9 @@ export const EventCard = ({ event }: Props) => {
             }
           `}
         >
-          {loading
+          {checking
+            ? "Checking..."
+            : loading
             ? "Signing up..."
             : joined
             ? "Joined"
